@@ -6,11 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'com.google.ar.sceneform.plugin'
 
-sceneform.asset('sampledata/models/andy.obj', // Source Asset Path
-        'default',                            // Material Path
-        'sampledata/models/andy.sfa',         // .sfa Output Path
-        'src/main/res/raw/andy')              // .sfb Output Path
-
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -45,3 +40,8 @@ dependencies {
     // Alternatively, use ArSceneView without the UX dependency.
     implementation 'com.google.ar.sceneform:core:1.4.0'
 }
+
+sceneform.asset('src/main/res/raw/arrow.fbx',   // Source Asset Path
+        'default',                              // Material Path
+        'sampledata/models/arrow.sfa',           // .sfa Output Path
+        'src/main/assets/arrow')                // .sfb Output Path
