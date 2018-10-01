@@ -4,6 +4,13 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.google.ar.sceneform.plugin'
+
+sceneform.asset('sampledata/models/andy.obj', // Source Asset Path
+        'default',                            // Material Path
+        'sampledata/models/andy.sfa',         // .sfa Output Path
+        'src/main/res/raw/andy')              // .sfb Output Path
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -21,8 +28,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
