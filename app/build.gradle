@@ -45,3 +45,9 @@ dependencies {
     // Alternatively, use ArSceneView without the UX dependency.
     implementation 'com.google.ar.sceneform:core:1.4.0'
 }
+
+
+sceneform.asset('../../../../../../Desktop/3D_Arrow(2).fbx',
+        'default',
+        '../../../../../../Desktop/3D_Arrow(2).sfa',
+        'src/main/assets/3D_Arrow(2)')
