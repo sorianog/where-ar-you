@@ -1,0 +1,65 @@
+{
+  animations: [
+    {
+      path: 'src/main/assets/arrow.fbx',
+    },
+  ],
+  materials: [
+    {
+      name: 'lambert2',
+      parameters: [
+        {
+          baseColor: [
+            0.1178,
+            0.0161,
+            0.0161,
+            1,
+          ],
+        },
+        {
+          baseColorMap: null,
+        },
+        {
+          normalMap: null,
+        },
+        {
+          interpolatedColor: null,
+        },
+        {
+          metallic: 0,
+        },
+        {
+          metallicMap: null,
+        },
+        {
+          roughness: 1,
+        },
+        {
+          roughnessMap: null,
+        },
+        {
+          reflectance: 0.5,
+        },
+        {
+          opacity: null,
+        },
+      ],
+      source: 'build/sceneform_sdk/default_materials/fbx_material.sfm',
+    },
+  ],
+  model: {
+    attributes: [
+      'Position',
+      'TexCoord',
+      'Orientation',
+      'BoneIndices',
+      'BoneWeights',
+    ],
+    collision: {},
+    file: 'src/main/assets/arrow.fbx',
+    name: 'arrow',
+    recenter: 'root',
+    scale: 0.02,
+  },
+  version: '0.52:1',
+}
