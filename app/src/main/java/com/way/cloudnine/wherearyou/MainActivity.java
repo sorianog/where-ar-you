@@ -50,10 +50,8 @@ import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.way.cloudnine.wherearyou.joe.JoeActivity;
+import com.way.cloudnine.wherearyou.joe.DatabaseManager;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -64,7 +62,7 @@ import uk.co.appoly.arcorelocation.utils.ARLocationPermissionHelper;
 /**
  * This is an example activity that uses the Sceneform UX package to make common AR tasks easier.
  */
-public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final double MIN_OPENGL_VERSION = 3.0;
     LocationManager locationManager;
@@ -86,11 +84,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ViewRenderable secondPointRenderable;
 
 
-
     // Our ARCore-Location scene
     private LocationScene locationScene;
 
-    private JoeActivity joeActivity;
+    private DatabaseManager databaseManager;
 
     private int currentNode;
 
@@ -103,10 +100,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setContentView(R.layout.activity_sceneform);
 
         currentNode = 0;
-        joeActivity = new JoeActivity();
+        databaseManager = new DatabaseManager();
 
-        joeActivity.CallDatabase();
-
+        databaseManager.CallDatabase();
 
 
         arSceneView = findViewById(R.id.ar_scene_view);
@@ -161,73 +157,73 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // detected.
         arSceneView
                 .getScene().addOnUpdateListener(
-                        frameTime -> {
-                            if (!hasFinishedLoading) {
-                                return;
-                            }
+                frameTime -> {
+                    if (!hasFinishedLoading) {
+                        return;
+                    }
 
-                            if (locationScene == null) {
-                                // If our locationScene object hasn't been setup yet, this is a good time to do it
-                                // We know that here, the AR components have been initiated.
-                                locationScene = new LocationScene(this, this, arSceneView);
+                    if (locationScene == null) {
+                        // If our locationScene object hasn't been setup yet, this is a good time to do it
+                        // We know that here, the AR components have been initiated.
+                        locationScene = new LocationScene(this, this, arSceneView);
 
-                                // Now lets create our location markers.
-                                // First, a layout
-                                LocationMarker layoutLocationMarkerFirstPoint = new LocationMarker(
-                                        joeActivity.list.get(0).getLongitude(),
-                                        joeActivity.list.get(0).getLatitude(),
-                                        firstPointView()
-                                );
+                        // Now lets create our location markers.
+                        // First, a layout
+                        LocationMarker layoutLocationMarkerFirstPoint = new LocationMarker(
+                                databaseManager.list.get(0).getLongitude(),
+                                databaseManager.list.get(0).getLatitude(),
+                                firstPointView()
+                        );
 
-                                LocationMarker layoutLocationMarkerSecondPoint = new LocationMarker(
-                                        -81.442835,
-                                        41.54800,
-                                        secondPointView()
-                                );
+                        LocationMarker layoutLocationMarkerSecondPoint = new LocationMarker(
+                                -81.442835,
+                                41.54800,
+                                secondPointView()
+                        );
 
-                                // An example "onRender" event, called every frame
-                                // Updates the layout with the markers distance
-                                layoutLocationMarkerFirstPoint.setRenderEvent(node -> {
+                        // An example "onRender" event, called every frame
+                        // Updates the layout with the markers distance
+                        layoutLocationMarkerFirstPoint.setRenderEvent(node -> {
 
-                                    View eView = firstPointRenderable.getView();
-                                    TextView distanceTextView = eView.findViewById(R.id.textView2);
-                                    distanceTextView.setText(node.getDistance() + "M");
-                                });
-                                layoutLocationMarkerSecondPoint.setRenderEvent(node -> {
-
-                                    View eView = secondPointRenderable.getView();
-                                    TextView distanceTextView = eView.findViewById(R.id.secondPointLocation);
-                                    distanceTextView.setText(node.getDistance() + "M");
-                                });
-                                // Adding the marker
-                                locationScene.mLocationMarkers.add(layoutLocationMarkerFirstPoint);
-
-                                // Adding a simple location marker of a 3D model
-
-                            }
-
-                            Frame frame = arSceneView.getArFrame();
-                            if (frame == null) {
-                                return;
-                            }
-
-                            if (frame.getCamera().getTrackingState() != TrackingState.TRACKING) {
-                                return;
-                            }
-
-                            if (locationScene != null) {
-                                locationScene.processFrame(frame);
-                            }
-
-                            if (loadingMessageSnackbar != null) {
-                                for (Plane plane : frame.getUpdatedTrackables(Plane.class)) {
-                                    if (plane.getTrackingState() == TrackingState.TRACKING) {
-                                        hideLoadingMessage();
-                                    }
-                                }
-                            }
-
+                            View eView = firstPointRenderable.getView();
+                            TextView distanceTextView = eView.findViewById(R.id.textView2);
+                            distanceTextView.setText(node.getDistance() + "M");
                         });
+                        layoutLocationMarkerSecondPoint.setRenderEvent(node -> {
+
+                            View eView = secondPointRenderable.getView();
+                            TextView distanceTextView = eView.findViewById(R.id.secondPointLocation);
+                            distanceTextView.setText(node.getDistance() + "M");
+                        });
+                        // Adding the marker
+                        locationScene.mLocationMarkers.add(layoutLocationMarkerFirstPoint);
+
+                        // Adding a simple location marker of a 3D model
+
+                    }
+
+                    Frame frame = arSceneView.getArFrame();
+                    if (frame == null) {
+                        return;
+                    }
+
+                    if (frame.getCamera().getTrackingState() != TrackingState.TRACKING) {
+                        return;
+                    }
+
+                    if (locationScene != null) {
+                        locationScene.processFrame(frame);
+                    }
+
+                    if (loadingMessageSnackbar != null) {
+                        for (Plane plane : frame.getUpdatedTrackables(Plane.class)) {
+                            if (plane.getTrackingState() == TrackingState.TRACKING) {
+                                hideLoadingMessage();
+                            }
+                        }
+                    }
+
+                });
 
 
         // Lastly request CAMERA & fine location permission which is required by ARCore-Location.
@@ -247,12 +243,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
             currentNode++;
-            double latitude = joeActivity.list.get(currentNode).getLatitude();
-            double longitude = joeActivity.list.get(currentNode).getLongitude();
+            double latitude = databaseManager.list.get(currentNode).getLatitude();
+            double longitude = databaseManager.list.get(currentNode).getLongitude();
             locationScene.mLocationMarkers.get(0).latitude = latitude;
             locationScene.mLocationMarkers.get(0).longitude = longitude;
             Toast.makeText(
-                    c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " +locationScene.mLocationMarkers.get(0).longitude, Toast.LENGTH_LONG)
+                    c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude, Toast.LENGTH_LONG)
                     .show();
             return false;
         });
@@ -584,9 +580,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         public void onLocationChanged(Location location) {
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
-            String msg = "New Latitude: " +latitude + " New Longitude: " + longitude;
+            String msg = "New Latitude: " + latitude + " New Longitude: " + longitude;
             //Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
-            System.out.println("New Latitude: " +latitude + " New Longitude: " + longitude);
+            System.out.println("New Latitude: " + latitude + " New Longitude: " + longitude);
             geoField = new GeomagneticField(
                     Double.valueOf(location.getLatitude()).floatValue(),
                     Double.valueOf(location.getLongitude()).floatValue(),
@@ -594,7 +590,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     System.currentTimeMillis()
             );
 
-            //new JoeActivity().Trash(locationManager,geoField);
+            //new DatabaseManager().Trash(locationManager,geoField);
         }
 
         @Override
@@ -620,27 +616,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     }
 */
-    private void isLocationEnabled(){
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            AlertDialog.Builder alertDialog=new AlertDialog.Builder(mContext);
+    private void isLocationEnabled() {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setTitle("Enable Location");
             alertDialog.setMessage("Your locations setting is not enabled. Please enabled it in settings menu.");
             alertDialog.setPositiveButton("Location Settings", (dialog, which) -> {
-                Intent intent=new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             });
             alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-            AlertDialog alert=alertDialog.create();
+            AlertDialog alert = alertDialog.create();
             alert.show();
 
 
-        }
-        else{
-            AlertDialog.Builder alertDialog=new AlertDialog.Builder(mContext);
+        } else {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setTitle("Confirm Location");
             alertDialog.setMessage("Your Location is enabled, please enjoy");
             alertDialog.setNegativeButton("Back to interface", (dialog, which) -> dialog.cancel());
-            AlertDialog alert=alertDialog.create();
+            AlertDialog alert = alertDialog.create();
             //alert.show();
         }
     }

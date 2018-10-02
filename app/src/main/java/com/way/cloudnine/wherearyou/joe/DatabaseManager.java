@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class JoeActivity {
+public class DatabaseManager {
     public List<Node> list = new ArrayList<>();
     public List<Node> shortestPathList = new ArrayList<>();
     public Node nextNode = new Node();
