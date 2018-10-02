@@ -48,18 +48,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
 
 
-
-
         //isLocationEnabled();
 
 
     }
-    private void rotateArrow(float angle){
+
+    private void rotateArrow(float angle) {
 
         //arrowView = findViewById(R.id.arrowView);
-        Matrix  matrix = new Matrix();
+        Matrix matrix = new Matrix();
         arrowView.setScaleType(ImageView.ScaleType.MATRIX);
-        matrix.postRotate(angle, arrowView.getDrawable().getIntrinsicWidth(),arrowView.getDrawable().getIntrinsicHeight());
+        matrix.postRotate(angle, arrowView.getDrawable().getIntrinsicWidth(), arrowView.getDrawable().getIntrinsicHeight());
         arrowView.setImageMatrix(matrix);
 
     }
@@ -76,15 +75,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
 
-
     LocationListener locationListenerGPS = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
-            String msg = "New Latitude: " +latitude + " New Longitude: " + longitude;
+            String msg = "New Latitude: " + latitude + " New Longitude: " + longitude;
             //Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
-            System.out.println("New Latitude: " +latitude + " New Longitude: " + longitude);
+            System.out.println("New Latitude: " + latitude + " New Longitude: " + longitude);
             geoField = new GeomagneticField(
                     Double.valueOf(location.getLatitude()).floatValue(),
                     Double.valueOf(location.getLongitude()).floatValue(),
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     System.currentTimeMillis()
             );
 
-            new DatabaseManager().Trash(locationManager,geoField);
+            new DatabaseManager().Trash(locationManager, geoField);
         }
 
         @Override
@@ -111,13 +109,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     };
 
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         isLocationEnabled();
 
     }
 
-    public void DoStuff(){
+    public void DoStuff() {
         @SuppressLint("MissingPermission") Location startingLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
 
@@ -135,27 +133,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         int round = Math.round(-heading / 360 + 180);
     }
 
-    private void isLocationEnabled(){
-        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            AlertDialog.Builder alertDialog=new AlertDialog.Builder(mContext);
+    private void isLocationEnabled() {
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setTitle("Enable Location");
             alertDialog.setMessage("Your locations setting is not enabled. Please enabled it in settings menu.");
             alertDialog.setPositiveButton("Location Settings", (dialog, which) -> {
-                Intent intent=new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             });
             alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-            AlertDialog alert=alertDialog.create();
+            AlertDialog alert = alertDialog.create();
             alert.show();
 
 
-        }
-        else{
-            AlertDialog.Builder alertDialog=new AlertDialog.Builder(mContext);
+        } else {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
             alertDialog.setTitle("Confirm Location");
             alertDialog.setMessage("Your Location is enabled, please enjoy");
             alertDialog.setNegativeButton("Back to interface", (dialog, which) -> dialog.cancel());
-            AlertDialog alert=alertDialog.create();
+            AlertDialog alert = alertDialog.create();
             //alert.show();
         }
     }

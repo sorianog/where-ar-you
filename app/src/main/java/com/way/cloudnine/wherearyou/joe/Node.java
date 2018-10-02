@@ -16,7 +16,7 @@ public class Node {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Node(String building, int floor, double latitude, double longitude, String name, List<String> connections, String id){
+    public Node(String building, int floor, double latitude, double longitude, String name, List<String> connections, String id) {
         this.building = building;
         this.floor = floor;
         this.latitude = latitude;
@@ -30,7 +30,7 @@ public class Node {
         return building;
     }
 
-    public String getId(){
+    public String getId() {
         return id;
     }
 
