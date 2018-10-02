@@ -59,7 +59,7 @@
     file: 'src/main/assets/arrow.fbx',
     name: 'arrow',
     recenter: 'root',
-    scale: 0.996973,
+    scale: 0.02,
   },
   version: '0.52:1',
 }
