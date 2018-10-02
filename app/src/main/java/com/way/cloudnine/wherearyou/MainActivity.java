@@ -31,6 +31,8 @@ import com.google.ar.core.Anchor;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.sceneform.AnchorNode;
+import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.google.ar.sceneform.ux.TransformableNode;
@@ -51,7 +53,10 @@ public class MainActivity extends AppCompatActivity {
     // FutureReturnValueIgnored is not valid
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initResources();
+    }
 
+    private void initResources() {
         if (!checkIsSupportedDeviceOrFinish(this)) {
             return;
         }
@@ -73,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
                             toast.show();
                             return null;
                         });
+
+//        TODO: Figure out how to add arrow on screen/scene upon app launch (so without the need to click)
+//        Node node = new Node();
+//        node.setParent(arFragment.getArSceneView().getScene().getCamera());
+//        node.setLocalPosition(new Vector3(0f, 0f, 0f));
+//        node.setRenderable(arrowRenderable);
 
         arFragment.setOnTapArPlaneListener(
                 (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
