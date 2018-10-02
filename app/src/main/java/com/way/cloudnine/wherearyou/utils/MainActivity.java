@@ -1,4 +1,4 @@
-package com.way.cloudnine.wherearyou.joe;
+package com.way.cloudnine.wherearyou.utils;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

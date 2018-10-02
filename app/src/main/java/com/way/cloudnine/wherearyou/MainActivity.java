@@ -34,7 +34,7 @@ import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.way.cloudnine.wherearyou.joe.DatabaseManager;
+import com.way.cloudnine.wherearyou.utils.DatabaseManager;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
