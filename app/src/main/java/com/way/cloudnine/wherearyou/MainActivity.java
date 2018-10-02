@@ -32,6 +32,7 @@ import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.Node;
+import com.google.ar.sceneform.math.Quaternion;
 import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
@@ -79,29 +80,14 @@ public class MainActivity extends AppCompatActivity {
                             return null;
                         });
 
-//        TODO: Figure out how to add arrow on screen/scene upon app launch (so without the need to click)
-//        Node node = new Node();
-//        node.setParent(arFragment.getArSceneView().getScene().getCamera());
-//        node.setLocalPosition(new Vector3(0f, 0f, 0f));
-//        node.setRenderable(arrowRenderable);
-
-        arFragment.setOnTapArPlaneListener(
-                (HitResult hitResult, Plane plane, MotionEvent motionEvent) -> {
-                    if (arrowRenderable == null) {
-                        return;
-                    }
-
-                    // Create the Anchor.
-                    Anchor anchor = hitResult.createAnchor();
-                    AnchorNode anchorNode = new AnchorNode(anchor);
-                    anchorNode.setParent(arFragment.getArSceneView().getScene());
-
-                    // Create the transformable arrow and add it to the anchor.
-                    TransformableNode arrow = new TransformableNode(arFragment.getTransformationSystem());
-                    arrow.setParent(anchorNode);
-                    arrow.setRenderable(arrowRenderable);
-                    arrow.select();
-                });
+        Node node = new Node();
+        arFragment.getArSceneView().getScene().addOnUpdateListener(frameTime -> {
+            arFragment.onUpdate(frameTime);
+            node.setParent(arFragment.getArSceneView().getScene().getCamera());
+            node.setWorldPosition(new Vector3(0f, 0f, -1f));
+            node.setWorldRotation(new Quaternion(0f, 0f,0f,0f));
+            node.setRenderable(arrowRenderable);
+        });
     }
 
     /**
