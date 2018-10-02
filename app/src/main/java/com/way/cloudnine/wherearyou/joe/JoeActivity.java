@@ -230,7 +230,7 @@ public class JoeActivity {
 
     private void rotateArrow(float angle){
 
-        arrowView.findViewById(R.id.arrowView);
+        //arrowView.findViewById(R.id.arrowView);
         Matrix matrix = new Matrix();
         arrowView.setScaleType(ImageView.ScaleType.MATRIX);
         matrix.postRotate(angle, arrowView.getDrawable().getIntrinsicWidth(),arrowView.getDrawable().getIntrinsicHeight());
