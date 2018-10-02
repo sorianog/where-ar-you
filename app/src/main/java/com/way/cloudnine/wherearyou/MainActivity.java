@@ -247,13 +247,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
             currentNode++;
-            double latitude = joeActivity.list.get(currentNode).getLatitude();
-            double longitude = joeActivity.list.get(currentNode).getLongitude();
-            locationScene.mLocationMarkers.get(0).latitude = latitude;
-            locationScene.mLocationMarkers.get(0).longitude = longitude;
-            Toast.makeText(
-                    c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " +locationScene.mLocationMarkers.get(0).longitude, Toast.LENGTH_LONG)
-                    .show();
+            if(currentNode < joeActivity.list.size() - 1) {
+                double latitude = joeActivity.list.get(currentNode).getLatitude();
+                double longitude = joeActivity.list.get(currentNode).getLongitude();
+                locationScene.mLocationMarkers.get(0).latitude = latitude;
+                locationScene.mLocationMarkers.get(0).longitude = longitude;
+                Toast.makeText(
+                        c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude + " Location: " + joeActivity.list.get(currentNode).getName(), Toast.LENGTH_LONG)
+                        .show();
+            }
             return false;
         });
 

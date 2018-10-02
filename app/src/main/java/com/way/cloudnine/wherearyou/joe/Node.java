@@ -46,7 +46,7 @@ public class Node {
         return longitude;
     }
 
-    public String setName() {
+    public String getName() {
         return name;
     }
 
