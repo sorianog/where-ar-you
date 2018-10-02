@@ -1,7 +1,7 @@
 {
   animations: [
     {
-      path: 'src/main/res/raw/arrow.fbx',
+      path: 'src/main/assets/arrow.fbx',
     },
   ],
   materials: [
@@ -56,7 +56,7 @@
       'BoneWeights',
     ],
     collision: {},
-    file: 'src/main/res/raw/arrow.fbx',
+    file: 'src/main/assets/arrow.fbx',
     name: 'arrow',
     recenter: 'root',
     scale: 0.996973,

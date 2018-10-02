@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.google.ar.sceneform:core:1.4.0'
 }
 
-sceneform.asset('src/main/res/raw/arrow.fbx',   // Source Asset Path
+sceneform.asset('src/main/assets/arrow.fbx',    // Source Asset Path
         'default',                              // Material Path
-        'sampledata/models/arrow.sfa',           // .sfa Output Path
-        'src/main/assets/arrow')                // .sfb Output Path
+        'src/main/assets/arrow.sfa',            // .sfa Output Path
+        'src/main/res/raw/arrow')               // .sfb Output Path
