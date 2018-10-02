@@ -1,4 +1,4 @@
-package com.way.cloudnine.wherearyou.joe;
+package com.way.cloudnine.wherearyou.utils;
 
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
@@ -6,8 +6,6 @@ import android.hardware.GeomagneticField;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
-import android.util.ArrayMap;
 import android.widget.ImageView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -15,15 +13,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.way.cloudnine.wherearyou.R;
 
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class JoeActivity {
+public class DatabaseManager {
     public List<Node> list = new ArrayList<>();
     public List<Node> shortestPathList = new ArrayList<>();
     public Node nextNode = new Node();
@@ -39,7 +34,7 @@ public class JoeActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
                     list.add(child.getValue(Node.class));
                 }
                 System.out.println(list.get(0).getBuilding());
@@ -55,7 +50,6 @@ public class JoeActivity {
         });
 
 
-
     }
 
     public void CallDatabase() {
@@ -66,7 +60,7 @@ public class JoeActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
                     list.add(child.getValue(Node.class));
                 }
                 System.out.println(list.get(0).getBuilding());
@@ -112,9 +106,9 @@ public class JoeActivity {
     };*/
 
 
-    public void ChangeDirection(String id){
-        if((GetCurrentLocationLatitude() >= shortestPathList.get(Integer.parseInt(id)).getLatitude() - .00100  && GetCurrentLocationLatitude() <=shortestPathList.get(Integer.parseInt(id)).getLatitude() + .00100 ) &&
-                (GetCurrentLocationLongitude() >= shortestPathList.get(Integer.parseInt(id)).getLongitude() - .00100  && GetCurrentLocationLongitude() <=shortestPathList.get(Integer.parseInt(id)).getLatitude() + .00100) ) {
+    public void ChangeDirection(String id) {
+        if ((GetCurrentLocationLatitude() >= shortestPathList.get(Integer.parseInt(id)).getLatitude() - .00100 && GetCurrentLocationLatitude() <= shortestPathList.get(Integer.parseInt(id)).getLatitude() + .00100) &&
+                (GetCurrentLocationLongitude() >= shortestPathList.get(Integer.parseInt(id)).getLongitude() - .00100 && GetCurrentLocationLongitude() <= shortestPathList.get(Integer.parseInt(id)).getLatitude() + .00100)) {
             //Turn Arrow
         }
     }
@@ -128,10 +122,10 @@ public class JoeActivity {
     }
 
 
-    public Node GetNodeById(int id){
-        for (Node node: list
-             ) {
-            if(node.getId().equals(Integer.toString(id))){
+    public Node GetNodeById(int id) {
+        for (Node node : list
+                ) {
+            if (node.getId().equals(Integer.toString(id))) {
                 return node;
             }
         }
@@ -139,14 +133,13 @@ public class JoeActivity {
     }
 
 
-
-    public void GetShortesPathOfNodes(){
-        for(int i = 0; i < list.size(); i++){
+    public void GetShortesPathOfNodes() {
+        for (int i = 0; i < list.size(); i++) {
             shortestPathList.add(list.get(i));
         }
     }
 
-    public double GetDistance(List<Node> list, String firstNode, String secondNode){
+    public double GetDistance(List<Node> list, String firstNode, String secondNode) {
         double R = 6372.8; // In kilometers
         double kmToFeet = 3280.84;
         double lat1 = list.get(Integer.parseInt(firstNode)).getLatitude();
@@ -160,31 +153,31 @@ public class JoeActivity {
         lat1 = Math.toRadians(lat1);
         lat2 = Math.toRadians(lat2);
 
-        double a = Math.pow(Math.sin(dLat / 2),2) + Math.pow(Math.sin(dLon / 2),2) * Math.cos(lat1) * Math.cos(lat2);
+        double a = Math.pow(Math.sin(dLat / 2), 2) + Math.pow(Math.sin(dLon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        double d =  R * c * kmToFeet;
+        double d = R * c * kmToFeet;
         return d;
     }
 
-    public List<Double> GetSortedShortestPath(List<Node> list){
+    public List<Double> GetSortedShortestPath(List<Node> list) {
         List<Double> path = new ArrayList<>();
 
-        for(int i =0; i < list.size() - 1; i++){
-            for (int j = i + 1; j < list.size() ;j++){
-                path.add(GetDistance(list, Integer.toString(i),Integer.toString(j)));
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = i + 1; j < list.size(); j++) {
+                path.add(GetDistance(list, Integer.toString(i), Integer.toString(j)));
             }
         }
         Collections.sort(path);
-        return  path;
+        return path;
     }
 
 
-    public List<String> FindPath(List<Node> list){
+    public List<String> FindPath(List<Node> list) {
         List<String> path = new ArrayList<>();
 
-        for (int i = 0; i < list.size(); i++){
-            for (int j = 0; j < list.get(i).getConnections().size(); j++){
-                if(!path.contains(list.get(i).getConnections().get(j))) {
+        for (int i = 0; i < list.size(); i++) {
+            for (int j = 0; j < list.get(i).getConnections().size(); j++) {
+                if (!path.contains(list.get(i).getConnections().get(j))) {
                     path.add(list.get(i).getConnections().get(j));
                 }
             }
@@ -192,15 +185,15 @@ public class JoeActivity {
         return path;
     }
 
-    public List<String> GetNextConnectingNodes(List<Node> list, String currentNode){
+    public List<String> GetNextConnectingNodes(List<Node> list, String currentNode) {
         List<String> connectingNode = new ArrayList<>();
-        for (int i = 0; i < list.get(Integer.parseInt(currentNode)).getConnections().size(); i++){
+        for (int i = 0; i < list.get(Integer.parseInt(currentNode)).getConnections().size(); i++) {
             connectingNode.add(list.get(Integer.parseInt(currentNode)).getConnections().get(i));
         }
         return connectingNode;
     }
-    
-    public double[] FindCoordinatesOfNextConnectingNode(List<Node> list, String currentNode){
+
+    public double[] FindCoordinatesOfNextConnectingNode(List<Node> list, String currentNode) {
         double coordinates[] = new double[2];
 
         String nextNode = list.get(Integer.parseInt(currentNode)).getConnections().get(0);
@@ -211,7 +204,7 @@ public class JoeActivity {
         return coordinates;
     }
 
-    private void ReadFromDatabase(DatabaseReference myRef){
+    private void ReadFromDatabase(DatabaseReference myRef) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef2 = database.getReference("message2");
         myRef.addValueEventListener(new ValueEventListener() {
@@ -229,11 +222,9 @@ public class JoeActivity {
         });
 
 
-
-
     }
 
-    public void DoStuff(LocationManager locationManager, GeomagneticField geoField){
+    public void DoStuff(LocationManager locationManager, GeomagneticField geoField) {
 
         @SuppressLint("MissingPermission") Location startingLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
@@ -253,12 +244,12 @@ public class JoeActivity {
         int round = Math.round(-heading / 360 + 180);
     }
 
-    private void rotateArrow(float angle){
+    private void rotateArrow(float angle) {
 
         //arrowView.findViewById(R.id.arrowView);
         Matrix matrix = new Matrix();
         arrowView.setScaleType(ImageView.ScaleType.MATRIX);
-        matrix.postRotate(angle, arrowView.getDrawable().getIntrinsicWidth(),arrowView.getDrawable().getIntrinsicHeight());
+        matrix.postRotate(angle, arrowView.getDrawable().getIntrinsicWidth(), arrowView.getDrawable().getIntrinsicHeight());
         arrowView.setImageMatrix(matrix);
 
     }
