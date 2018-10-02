@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 locationScene.mLocationMarkers.get(0).latitude = latitude;
                 locationScene.mLocationMarkers.get(0).longitude = longitude;
                 Toast.makeText(
-                        c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude, Toast.LENGTH_LONG)
+                        c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude + " Location: " + databaseManager.list.get(currentNode).getName(), Toast.LENGTH_LONG)
                         .show();
             }
             return false;
