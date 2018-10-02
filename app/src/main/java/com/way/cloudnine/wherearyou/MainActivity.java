@@ -16,12 +16,10 @@ package com.way.cloudnine.wherearyou;
  * limitations under the License.
  */
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.hardware.GeomagneticField;
 import android.location.Location;
 import android.location.LocationListener;
@@ -36,28 +34,22 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.ar.core.Anchor;
+
 import com.google.ar.core.Frame;
-import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
 import com.google.ar.core.Session;
 import com.google.ar.core.TrackingState;
 import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.UnavailableException;
-import com.google.ar.sceneform.AnchorNode;
 import com.google.ar.sceneform.ArSceneView;
 import com.google.ar.sceneform.Node;
-import com.google.ar.sceneform.math.Vector3;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.google.ar.sceneform.ux.TransformableNode;
 import com.way.cloudnine.wherearyou.joe.JoeActivity;
 
 import java.util.concurrent.CompletableFuture;
@@ -65,8 +57,6 @@ import java.util.concurrent.ExecutionException;
 
 import uk.co.appoly.arcorelocation.LocationMarker;
 import uk.co.appoly.arcorelocation.LocationScene;
-import uk.co.appoly.arcorelocation.rendering.LocationNode;
-import uk.co.appoly.arcorelocation.rendering.LocationNodeRender;
 import uk.co.appoly.arcorelocation.utils.ARLocationPermissionHelper;
 
 /**
@@ -90,7 +80,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     // Renderables for this example
     private ModelRenderable andyRenderable;
-    private ViewRenderable exampleLayoutRenderable;
+    private ViewRenderable firstPointRenderable;
+    private ViewRenderable secondPointRenderable;
+
+
 
     // Our ARCore-Location scene
     private LocationScene locationScene;
@@ -105,10 +98,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         arSceneView = findViewById(R.id.ar_scene_view);
 
         // Build a renderable from a 2D View.
-        CompletableFuture<ViewRenderable> exampleLayout =
+        CompletableFuture<ViewRenderable> firstPoint =
                 ViewRenderable.builder()
                         .setView(this, R.layout.activity_main)
                         .build();
+
+        CompletableFuture<ViewRenderable> secondPoint =
+                ViewRenderable.builder()
+                        .setView(this, R.layout.second_point)
+                        .build();
+
 
         // When you build a Renderable, Sceneform loads its resources in the background while returning
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
@@ -118,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
 
         CompletableFuture.allOf(
-                exampleLayout,
+                firstPoint,
                 andy)
                 .handle(
                         (notUsed, throwable) -> {
@@ -132,7 +131,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             }
 
                             try {
-                                exampleLayoutRenderable = exampleLayout.get();
+                                firstPointRenderable = firstPoint.get();
+                                secondPointRenderable = secondPoint.get();
                                 andyRenderable = andy.get();
                                 hasFinishedLoading = true;
 
@@ -159,28 +159,47 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                                 // Now lets create our location markers.
                                 // First, a layout
-                                LocationMarker layoutLocationMarker = new LocationMarker(
+                                LocationMarker layoutLocationMarkerFirstPoint = new LocationMarker(
                                         -81.442901,
                                         41.548107,
-                                        getExampleView()
+                                        firstPointView()
+                                );
+
+                                LocationMarker layoutLocationMarkerSecondPoint = new LocationMarker(
+                                        -81.442835,
+                                        41.54800,
+                                        secondPointView()
                                 );
 
                                 // An example "onRender" event, called every frame
                                 // Updates the layout with the markers distance
-                                layoutLocationMarker.setRenderEvent(node -> {
+                                layoutLocationMarkerFirstPoint.setRenderEvent(node -> {
 
-                                    View eView = exampleLayoutRenderable.getView();
+                                    View eView = firstPointRenderable.getView();
                                     TextView distanceTextView = eView.findViewById(R.id.textView2);
                                     distanceTextView.setText(node.getDistance() + "M");
                                 });
+                                layoutLocationMarkerSecondPoint.setRenderEvent(node -> {
+
+                                    View eView = secondPointRenderable.getView();
+                                    TextView distanceTextView = eView.findViewById(R.id.secondPointLocation);
+                                    distanceTextView.setText(node.getDistance() + "M");
+                                });
                                 // Adding the marker
-                                locationScene.mLocationMarkers.add(layoutLocationMarker);
+                                locationScene.mLocationMarkers.add(layoutLocationMarkerFirstPoint);
+                                locationScene.mLocationMarkers.add(layoutLocationMarkerSecondPoint);
 
                                 // Adding a simple location marker of a 3D model
                                 locationScene.mLocationMarkers.add(
                                         new LocationMarker(
                                                 -81.442901,
                                                 41.548107,
+                                                getAndy()));
+
+                                locationScene.mLocationMarkers.add(
+                                        new LocationMarker(
+                                                -81.442835,
+                                                41.54800,
                                                 getAndy()));
                             }
 
@@ -204,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                     }
                                 }
                             }
+
                         });
 
 
@@ -216,12 +236,33 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
      *
      * @return
      */
-    private Node getExampleView() {
+    private Node firstPointView() {
         Node base = new Node();
-        base.setRenderable(exampleLayoutRenderable);
+        base.setRenderable(firstPointRenderable);
         Context c = this;
         // Add  listeners etc here
-        View eView = exampleLayoutRenderable.getView();
+        View eView = firstPointRenderable.getView();
+        eView.setOnTouchListener((v, event) -> {
+            Toast.makeText(
+                    c, "Location marker touched.", Toast.LENGTH_LONG)
+                    .show();
+            return false;
+        });
+
+        return base;
+    }
+
+    /**
+     * Example node of a layout
+     *
+     * @return
+     */
+    private Node secondPointView() {
+        Node base = new Node();
+        base.setRenderable(secondPointRenderable);
+        Context c = this;
+        // Add  listeners etc here
+        View eView = secondPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
             Toast.makeText(
                     c, "Location marker touched.", Toast.LENGTH_LONG)
