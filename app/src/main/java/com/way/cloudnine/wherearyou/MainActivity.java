@@ -101,8 +101,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     // CompletableFuture requires api level 24
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        arSceneView = findViewById(R.id.ux_fragment);
+        setContentView(R.layout.activity_sceneform);
+        arSceneView = findViewById(R.id.ar_scene_view);
 
         // Build a renderable from a 2D View.
         CompletableFuture<ViewRenderable> exampleLayout =
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // When you build a Renderable, Sceneform loads its resources in the background while returning
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
         CompletableFuture<ModelRenderable> andy = ModelRenderable.builder()
-                .setSource(this, R.raw.arrow)
+                .setSource(this, R.raw.andy)
                 .build();
 
 
@@ -146,8 +146,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Set an update listener on the Scene that will hide the loading message once a Plane is
         // detected.
         arSceneView
-                .getScene()
-                .setOnUpdateListener(
+                .getScene().addOnUpdateListener(
                         frameTime -> {
                             if (!hasFinishedLoading) {
                                 return;
@@ -161,20 +160,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 // Now lets create our location markers.
                                 // First, a layout
                                 LocationMarker layoutLocationMarker = new LocationMarker(
-                                        -4.849509,
-                                        42.814603,
+                                        -81.442901,
+                                        41.548107,
                                         getExampleView()
                                 );
 
                                 // An example "onRender" event, called every frame
                                 // Updates the layout with the markers distance
-                                layoutLocationMarker.setRenderEvent(new LocationNodeRender() {
-                                    @Override
-                                    public void render(LocationNode node) {
-                                        View eView = exampleLayoutRenderable.getView();
-                                        TextView distanceTextView = eView.findViewById(R.id.textView2);
-                                        distanceTextView.setText(node.getDistance() + "M");
-                                    }
+                                layoutLocationMarker.setRenderEvent(node -> {
+
+                                    View eView = exampleLayoutRenderable.getView();
+                                    TextView distanceTextView = eView.findViewById(R.id.textView2);
+                                    distanceTextView.setText(node.getDistance() + "M");
                                 });
                                 // Adding the marker
                                 locationScene.mLocationMarkers.add(layoutLocationMarker);
@@ -182,8 +179,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 // Adding a simple location marker of a 3D model
                                 locationScene.mLocationMarkers.add(
                                         new LocationMarker(
-                                                -0.119677,
-                                                51.478494,
+                                                -81.442901,
+                                                41.548107,
                                                 getAndy()));
                             }
 
@@ -451,6 +448,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     }
 */
+
+/*
+
     private void initResources() {
         if (!checkIsSupportedDeviceOrFinish(this)) {
             return;
@@ -498,6 +498,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     arrow.select();
                 });
     }
+
+    */
 
     /**
      * Returns false and displays an error message if Sceneform can not run, true if Sceneform can run
