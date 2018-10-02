@@ -30,7 +30,7 @@ public class JoeActivity {
     LocationListener locationListener;
     private ImageView arrowView;
 
-    public void CallDataBase(LocationManager locationManager, GeomagneticField geoField) {
+    public void Trash(LocationManager locationManager, GeomagneticField geoField) {
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -57,6 +57,31 @@ public class JoeActivity {
 
 
     }
+
+    public void CallDatabase() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("locations");
+        myRef.child("10000/name").setValue("message");
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot child: dataSnapshot.getChildren()) {
+                    list.add(child.getValue(Node.class));
+                }
+                System.out.println(list.get(0).getBuilding());
+                //GetSortedShortestPath(list);
+                //System.out.println("Feet:" + GetDistance(list,"1","2"));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 
     /*
     private final LocationListener locationListener = new LocationListener() {

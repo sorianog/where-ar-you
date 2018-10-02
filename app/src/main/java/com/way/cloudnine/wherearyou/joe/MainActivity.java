@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_main);
-        //new JoeActivity().CallDataBase();
+        //new JoeActivity().Trash();
 
         mContext = this;
         locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     System.currentTimeMillis()
             );
 
-            new JoeActivity().CallDataBase(locationManager,geoField);
+            new JoeActivity().Trash(locationManager,geoField);
         }
 
         @Override

@@ -52,6 +52,8 @@ import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.way.cloudnine.wherearyou.joe.JoeActivity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -88,6 +90,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     // Our ARCore-Location scene
     private LocationScene locationScene;
 
+    private JoeActivity joeActivity;
+
+    private int currentNode;
+
 
     @Override
     @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
@@ -95,6 +101,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sceneform);
+
+        currentNode = 0;
+        joeActivity = new JoeActivity();
+
+        joeActivity.CallDatabase();
+
+
+
         arSceneView = findViewById(R.id.ar_scene_view);
 
         // Build a renderable from a 2D View.
@@ -160,8 +174,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 // Now lets create our location markers.
                                 // First, a layout
                                 LocationMarker layoutLocationMarkerFirstPoint = new LocationMarker(
-                                        -81.442901,
-                                        41.548107,
+                                        joeActivity.list.get(0).getLongitude(),
+                                        joeActivity.list.get(0).getLatitude(),
                                         firstPointView()
                                 );
 
@@ -232,8 +246,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Add  listeners etc here
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
-            locationScene.mLocationMarkers.get(0).latitude = 41.54800;
-            locationScene.mLocationMarkers.get(0).longitude = -81.442835;
+            currentNode++;
+            double latitude = joeActivity.list.get(currentNode).getLatitude();
+            double longitude = joeActivity.list.get(currentNode).getLongitude();
+            locationScene.mLocationMarkers.get(0).latitude = latitude;
+            locationScene.mLocationMarkers.get(0).longitude = longitude;
             Toast.makeText(
                     c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " +locationScene.mLocationMarkers.get(0).longitude, Toast.LENGTH_LONG)
                     .show();
@@ -577,7 +594,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     System.currentTimeMillis()
             );
 
-            new JoeActivity().CallDataBase(locationManager,geoField);
+            //new JoeActivity().Trash(locationManager,geoField);
         }
 
         @Override
