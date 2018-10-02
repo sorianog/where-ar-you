@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .setSource(this, R.raw.andy)
                 .build();
 
-
         CompletableFuture.allOf(
                 firstPoint,
                 andy)
@@ -227,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
             currentNode++;
-            if(currentNode < databaseManager.list.size() - 1) {
+            if (currentNode < databaseManager.list.size() - 1) {
                 double latitude = databaseManager.list.get(currentNode).getLatitude();
                 double longitude = databaseManager.list.get(currentNode).getLongitude();
                 locationScene.mLocationMarkers.get(0).latitude = latitude;

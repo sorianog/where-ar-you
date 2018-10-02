@@ -26,8 +26,6 @@ public class DatabaseManager {
     private ImageView arrowView;
 
     public void Trash(LocationManager locationManager, GeomagneticField geoField) {
-
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("locations");
         myRef.addValueEventListener(new ValueEventListener() {
@@ -48,8 +46,6 @@ public class DatabaseManager {
 
             }
         });
-
-
     }
 
     public void CallDatabase() {
@@ -74,37 +70,6 @@ public class DatabaseManager {
             }
         });
     }
-
-
-
-    /*
-    private final LocationListener locationListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            geoField = new GeomagneticField(
-              Double.valueOf(location.getLatitude()).floatValue(),
-                    Double.valueOf(location.getLongitude()).floatValue(),
-                    Double.valueOf(location.getAltitude()).floatValue(),
-                    System.currentTimeMillis()
-            );
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-    };*/
-
 
     public void ChangeDirection(String id) {
         if ((GetCurrentLocationLatitude() >= shortestPathList.get(Integer.parseInt(id)).getLatitude() - .00100 && GetCurrentLocationLatitude() <= shortestPathList.get(Integer.parseInt(id)).getLatitude() + .00100) &&
@@ -170,7 +135,6 @@ public class DatabaseManager {
         Collections.sort(path);
         return path;
     }
-
 
     public List<String> FindPath(List<Node> list) {
         List<String> path = new ArrayList<>();
