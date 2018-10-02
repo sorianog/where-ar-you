@@ -187,20 +187,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 });
                                 // Adding the marker
                                 locationScene.mLocationMarkers.add(layoutLocationMarkerFirstPoint);
-                                locationScene.mLocationMarkers.add(layoutLocationMarkerSecondPoint);
 
                                 // Adding a simple location marker of a 3D model
-                                locationScene.mLocationMarkers.add(
-                                        new LocationMarker(
-                                                -81.442901,
-                                                41.548107,
-                                                getAndy()));
 
-                                locationScene.mLocationMarkers.add(
-                                        new LocationMarker(
-                                                -81.442835,
-                                                41.54800,
-                                                getAndy()));
                             }
 
                             Frame frame = arSceneView.getArFrame();
@@ -243,8 +232,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Add  listeners etc here
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
+            locationScene.mLocationMarkers.get(0).latitude = 41.54800;
+            locationScene.mLocationMarkers.get(0).longitude = -81.442835;
             Toast.makeText(
-                    c, "Location marker touched.", Toast.LENGTH_LONG)
+                    c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " +locationScene.mLocationMarkers.get(0).longitude, Toast.LENGTH_LONG)
                     .show();
             return false;
         });
