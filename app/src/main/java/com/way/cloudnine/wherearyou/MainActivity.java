@@ -1,8 +1,11 @@
 package com.way.cloudnine.wherearyou;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.GeomagneticField;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -69,6 +72,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         distanceDetails = findViewById(R.id.distanceDetails);
         locationDetails.setText("");
         distanceDetails.setText("");
+
+
+        boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        if(permissionGranted) {
+            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+        }
+
+
+
+
 
         arSceneView = findViewById(R.id.ar_scene_view);
 
