@@ -1,5 +1,6 @@
 package com.way.cloudnine.wherearyou;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.GeomagneticField;
 import android.location.LocationManager;
@@ -120,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 layoutLocationMarkerFirstPoint.setRenderEvent(waypoint -> {
 
                     View eView = firstPointRenderable.getView();
+                    TextView nextPointTextView = eView.findViewById(R.id.textView);
+                    nextPointTextView.setText("Head to your next destination: " + waypointRepository.getWaypoints().get(currentWaypoint).getName());
                     TextView distanceTextView = eView.findViewById(R.id.textView2);
                     distanceTextView.setText(waypoint.getDistance() + "M");
                 });
@@ -154,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ARLocationPermissionHelper.requestPermission(this);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private Node firstPointView() {
         Node base = new Node();
         base.setRenderable(firstPointRenderable);
