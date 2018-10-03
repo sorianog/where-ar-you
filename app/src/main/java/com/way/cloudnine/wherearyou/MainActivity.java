@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private LocationScene locationScene;
     private WaypointRepository waypointRepository = new WaypointRepository();
     private int currentWaypoint = 1;
+    private TextView locationDetails, distanceDetails;
 
     @Override
     // Called when the activity is created
@@ -64,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         // Set the view to the following activity
         setContentView(R.layout.activity_sceneform);
+        locationDetails = findViewById(R.id.locationDetails);
+        distanceDetails = findViewById(R.id.distanceDetails);
+        locationDetails.setText("");
+        distanceDetails.setText("");
 
         arSceneView = findViewById(R.id.ar_scene_view);
 
@@ -119,12 +124,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 // An example "onRender" event, called every frame
                 // Updates the layout with the markers distance
                 layoutLocationMarkerFirstPoint.setRenderEvent(waypoint -> {
+                    String way = waypointRepository.getWaypoints().get(currentWaypoint).getName()
 
-                    View eView = firstPointRenderable.getView();
-                    TextView nextPointTextView = eView.findViewById(R.id.textView);
-                    nextPointTextView.setText("Head to your next destination: " + waypointRepository.getWaypoints().get(currentWaypoint).getName());
-                    TextView distanceTextView = eView.findViewById(R.id.textView2);
-                    distanceTextView.setText(waypoint.getDistance() + "M");
+                    String location = waypointRepository.getWaypoints().get(currentWaypoint).getName();
+                    locationDetails.setText(location);
+
+                    String distance = waypoint.getDistance() + "M";
+                    distanceDetails.setText(distance);
                 });
 
                 // Adding the marker
