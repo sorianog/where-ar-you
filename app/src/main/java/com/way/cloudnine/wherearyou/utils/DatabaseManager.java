@@ -19,26 +19,26 @@ import java.util.Collections;
 import java.util.List;
 
 public class DatabaseManager {
-    public List<Node> list = new ArrayList<>();
-    public List<Node> shortestPathList = new ArrayList<>();
-    public Node nextNode = new Node();
+    public List<Waypoint> pathWaypoints = new ArrayList<>();
+    public List<Waypoint> shortestPathList = new ArrayList<>();
+    public Waypoint nextWaypoint = new Waypoint();
     LocationListener locationListener;
     private ImageView arrowView;
 
-    public void Trash(LocationManager locationManager, GeomagneticField geoField) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("locations");
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+    public void CallDatabase() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference locationsReference = firebaseDatabase.getReference("locations");
 
+        locationsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            // Called whenever data changes
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    list.add(child.getValue(Node.class));
+                    pathWaypoints.add(child.getValue(Waypoint.class));
                 }
-                System.out.println(list.get(0).getBuilding());
-                DoStuff(locationManager, geoField);
-                //GetSortedShortestPath(list);
-                //System.out.println("Feet:" + GetDistance(list,"1","2"));
+                System.out.println(pathWaypoints.get(0).getBuilding());
+                //GetSortedShortestPath(pathWaypoints);
+                //System.out.println("Feet:" + GetDistance(pathWaypoints,"1","2"));
             }
 
             @Override
@@ -48,20 +48,20 @@ public class DatabaseManager {
         });
     }
 
-    public void CallDatabase() {
+    public void Trash(LocationManager locationManager, GeomagneticField geoField) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("locations");
-        myRef.child("10000/name").setValue("message");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    list.add(child.getValue(Node.class));
+                    pathWaypoints.add(child.getValue(Waypoint.class));
                 }
-                System.out.println(list.get(0).getBuilding());
-                //GetSortedShortestPath(list);
-                //System.out.println("Feet:" + GetDistance(list,"1","2"));
+                System.out.println(pathWaypoints.get(0).getBuilding());
+                DoStuff(locationManager, geoField);
+                //GetSortedShortestPath(pathWaypoints);
+                //System.out.println("Feet:" + GetDistance(pathWaypoints,"1","2"));
             }
 
             @Override
@@ -87,11 +87,11 @@ public class DatabaseManager {
     }
 
 
-    public Node GetNodeById(int id) {
-        for (Node node : list
+    public Waypoint GetNodeById(int id) {
+        for (Waypoint waypoint : pathWaypoints
                 ) {
-            if (node.getId().equals(Integer.toString(id))) {
-                return node;
+            if (waypoint.getId().equals(Integer.toString(id))) {
+                return waypoint;
             }
         }
         return null;
@@ -99,12 +99,12 @@ public class DatabaseManager {
 
 
     public void GetShortesPathOfNodes() {
-        for (int i = 0; i < list.size(); i++) {
-            shortestPathList.add(list.get(i));
+        for (int i = 0; i < pathWaypoints.size(); i++) {
+            shortestPathList.add(pathWaypoints.get(i));
         }
     }
 
-    public double GetDistance(List<Node> list, String firstNode, String secondNode) {
+    public double GetDistance(List<Waypoint> list, String firstNode, String secondNode) {
         double R = 6372.8; // In kilometers
         double kmToFeet = 3280.84;
         double lat1 = list.get(Integer.parseInt(firstNode)).getLatitude();
@@ -124,7 +124,7 @@ public class DatabaseManager {
         return d;
     }
 
-    public List<Double> GetSortedShortestPath(List<Node> list) {
+    public List<Double> GetSortedShortestPath(List<Waypoint> list) {
         List<Double> path = new ArrayList<>();
 
         for (int i = 0; i < list.size() - 1; i++) {
@@ -136,7 +136,7 @@ public class DatabaseManager {
         return path;
     }
 
-    public List<String> FindPath(List<Node> list) {
+    public List<String> FindPath(List<Waypoint> list) {
         List<String> path = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
@@ -149,7 +149,7 @@ public class DatabaseManager {
         return path;
     }
 
-    public List<String> GetNextConnectingNodes(List<Node> list, String currentNode) {
+    public List<String> GetNextConnectingNodes(List<Waypoint> list, String currentNode) {
         List<String> connectingNode = new ArrayList<>();
         for (int i = 0; i < list.get(Integer.parseInt(currentNode)).getConnections().size(); i++) {
             connectingNode.add(list.get(Integer.parseInt(currentNode)).getConnections().get(i));
@@ -157,7 +157,7 @@ public class DatabaseManager {
         return connectingNode;
     }
 
-    public double[] FindCoordinatesOfNextConnectingNode(List<Node> list, String currentNode) {
+    public double[] FindCoordinatesOfNextConnectingNode(List<Waypoint> list, String currentNode) {
         double coordinates[] = new double[2];
 
         String nextNode = list.get(Integer.parseInt(currentNode)).getConnections().get(0);
@@ -194,9 +194,9 @@ public class DatabaseManager {
 
         Location endingLocation = new Location("ending point");
 
-        Node nextNode = GetNodeById(2);
-        endingLocation.setLatitude(nextNode.getLatitude());
-        endingLocation.setLongitude(nextNode.getLongitude());
+        Waypoint nextWaypoint = GetNodeById(2);
+        endingLocation.setLatitude(nextWaypoint.getLatitude());
+        endingLocation.setLongitude(nextWaypoint.getLongitude());
 
         float targetBearing = startingLocation.bearingTo(endingLocation);
 

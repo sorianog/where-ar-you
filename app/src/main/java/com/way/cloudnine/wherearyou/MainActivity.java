@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ViewRenderable secondPointRenderable;
     private LocationScene locationScene;
     private DatabaseManager databaseManager;
-    private int currentNode = 1;
+    private int currentWaypoint = 1;
 
     @Override
     // Called when the activity is created
@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         // Now lets create our location markers.
                         // First, a layout
                         LocationMarker layoutLocationMarkerFirstPoint = new LocationMarker(
-                                databaseManager.list.get(0).getLongitude(),
-                                databaseManager.list.get(0).getLatitude(),
+                                databaseManager.pathWaypoints.get(0).getLongitude(),
+                                databaseManager.pathWaypoints.get(0).getLatitude(),
                                 firstPointView()
                         );
 
@@ -150,17 +150,17 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                         // An example "onRender" event, called every frame
                         // Updates the layout with the markers distance
-                        layoutLocationMarkerFirstPoint.setRenderEvent(node -> {
+                        layoutLocationMarkerFirstPoint.setRenderEvent(waypoint -> {
 
                             View eView = firstPointRenderable.getView();
                             TextView distanceTextView = eView.findViewById(R.id.textView2);
-                            distanceTextView.setText(node.getDistance() + "M");
+                            distanceTextView.setText(waypoint.getDistance() + "M");
                         });
-                        layoutLocationMarkerSecondPoint.setRenderEvent(node -> {
+                        layoutLocationMarkerSecondPoint.setRenderEvent(waypoint -> {
 
                             View eView = secondPointRenderable.getView();
                             TextView distanceTextView = eView.findViewById(R.id.secondPointLocation);
-                            distanceTextView.setText(node.getDistance() + "M");
+                            distanceTextView.setText(waypoint.getDistance() + "M");
                         });
                         // Adding the marker
                         locationScene.mLocationMarkers.add(layoutLocationMarkerFirstPoint);
@@ -199,16 +199,16 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Add  listeners etc here
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
-            if (currentNode < databaseManager.list.size() - 1) {
-                double latitude = databaseManager.list.get(currentNode).getLatitude();
-                double longitude = databaseManager.list.get(currentNode).getLongitude();
+            if (currentWaypoint < databaseManager.pathWaypoints.size() - 1) {
+                double latitude = databaseManager.pathWaypoints.get(currentWaypoint).getLatitude();
+                double longitude = databaseManager.pathWaypoints.get(currentWaypoint).getLongitude();
                 locationScene.mLocationMarkers.get(0).latitude = latitude;
                 locationScene.mLocationMarkers.get(0).longitude = longitude;
                 Toast.makeText(
-                        c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude + " Location: " + databaseManager.list.get(currentNode).getName(), Toast.LENGTH_LONG)
+                        c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude + " Location: " + databaseManager.pathWaypoints.get(currentWaypoint).getName(), Toast.LENGTH_LONG)
                         .show();
             }
-            currentNode++;
+            currentWaypoint++;
             return false;
         });
         return base;

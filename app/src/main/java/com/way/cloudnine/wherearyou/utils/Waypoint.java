@@ -2,7 +2,7 @@ package com.way.cloudnine.wherearyou.utils;
 
 import java.util.List;
 
-public class Node {
+public class Waypoint {
     private String building;
     private int floor;
     private double latitude;
@@ -12,11 +12,11 @@ public class Node {
     private String id;
 
 
-    public Node() {
+    public Waypoint() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
 
-    public Node(String building, int floor, double latitude, double longitude, String name, List<String> connections, String id) {
+    public Waypoint(String building, int floor, double latitude, double longitude, String name, List<String> connections, String id) {
         this.building = building;
         this.floor = floor;
         this.latitude = latitude;
