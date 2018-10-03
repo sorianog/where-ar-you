@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.GeomagneticField;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -77,19 +78,35 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         if(permissionGranted) {
-            this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Location location = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
-        }
 
-        Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                updateBanner();
-            }
-        }, 0, 1000);
+            final LocationListener locationListener = new LocationListener() {
+                public void onLocationChanged(Location location) {
+                    distanceDetails.setText("Long" + location.getLongitude());
+                    locationDetails.setText("Lat" + location.getLatitude());
+                    System.out.println("Location Changed");
+                    System.out.println("Long " + location.getLongitude());
+                    System.out.println("Lat " + location.getLatitude());
+                }
+                @Override
+                public void onStatusChanged(String s, int i, Bundle bundle) {
+                }
+                @Override
+                public void onProviderEnabled(String s) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String s) {
+
+                }
+            };
+
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0.1f, locationListener);
+        }
 
         arSceneView = findViewById(R.id.ar_scene_view);
 
@@ -146,10 +163,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 // Updates the layout with the markers distance
                 layoutLocationMarkerFirstPoint.setRenderEvent(waypoint -> {
                     String location = waypointRepository.getWaypoints().get(currentWaypoint).getName();
-                    locationDetails.setText(location);
+                    // locationDetails.setText(location);
 
                     String distance = waypoint.getDistance() + "M";
-                    distanceDetails.setText(distance);
+                    // distanceDetails.setText(distance);
                 });
 
                 // Adding the marker
@@ -182,10 +199,24 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         ARLocationPermissionHelper.requestPermission(this);
     }
 
+    /*private final LocationListener locationListener = new LocationListener() {
+        public void onLocationChanged(Location location) {
+            System.out.println("It Updated Location");
+        }
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+        }
+        @Override
+        public void onProviderEnabled(String s) {
 
-    public void updateBanner(){
-        System.out.println("WERHGFIUWORHGOIUWERHGOIWURHGIOWURHGOIUWR");
-    }
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };*/
+
 
     @SuppressLint("ClickableViewAccessibility")
     private Node firstPointView() {
