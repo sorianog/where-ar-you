@@ -61,14 +61,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ViewRenderable secondPointRenderable;
     private LocationScene locationScene;
     private DatabaseManager databaseManager;
-    private int currentNode;
+    private int currentNode = 1;
 
     @Override
+    // Called when the activity is created
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sceneform);
 
-        currentNode = 0;
+        // Set the view to the following activity
+        setContentView(R.layout.activity_sceneform);
 
         databaseManager = new DatabaseManager();
         databaseManager.CallDatabase();
@@ -198,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Add  listeners etc here
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
-            currentNode++;
             if (currentNode < databaseManager.list.size() - 1) {
                 double latitude = databaseManager.list.get(currentNode).getLatitude();
                 double longitude = databaseManager.list.get(currentNode).getLongitude();
@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude + " Location: " + databaseManager.list.get(currentNode).getName(), Toast.LENGTH_LONG)
                         .show();
             }
+            currentNode++;
             return false;
         });
         return base;
