@@ -72,19 +72,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         .setView(this, R.layout.activity_main)
                         .build();
 
-        CompletableFuture<ViewRenderable> secondPoint =
-                ViewRenderable.builder()
-                        .setView(this, R.layout.second_point)
-                        .build();
-
         // When you build a Renderable, Sceneform loads its resources in the background while returning
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
-        CompletableFuture<ModelRenderable> andy = ModelRenderable.builder()
-                .setSource(this, R.raw.andy)
-                .build();
 
         CompletableFuture
-                .allOf(firstPoint, andy)
+                .allOf(firstPoint)
                 .handle((notUsed, throwable) -> {
                     // When you build a Renderable, Sceneform loads its resources in the background while
                     // returning a CompletableFuture. Call handle(), thenAccept(), or check isDone()
@@ -97,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                     try {
                         firstPointRenderable = firstPoint.get();
-                        secondPointRenderable = secondPoint.get();
-                        andyRenderable = andy.get();
                         finishedLoading = true;
 
                     } catch (InterruptedException | ExecutionException ex) {
@@ -125,13 +115,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         firstPointView()
                 );
 
-                Waypoint secondWaypoint = waypointRepository.getWaypointById("2");
-                LocationMarker layoutLocationMarkerSecondPoint = new LocationMarker(
-                        secondWaypoint.getLongitude(),
-                        secondWaypoint.getLatitude(),
-                        secondPointView()
-                );
-
                 // An example "onRender" event, called every frame
                 // Updates the layout with the markers distance
                 layoutLocationMarkerFirstPoint.setRenderEvent(waypoint -> {
@@ -140,12 +123,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     TextView distanceTextView = eView.findViewById(R.id.textView2);
                     distanceTextView.setText(waypoint.getDistance() + "M");
                 });
-                layoutLocationMarkerSecondPoint.setRenderEvent(waypoint -> {
 
-                    View eView = secondPointRenderable.getView();
-                    TextView distanceTextView = eView.findViewById(R.id.secondPointLocation);
-                    distanceTextView.setText(waypoint.getDistance() + "M");
-                });
                 // Adding the marker
                 locationScene.mLocationMarkers.add(layoutLocationMarkerFirstPoint);
             }
@@ -194,21 +172,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         .show();
             }
             currentWaypoint++;
-            return false;
-        });
-        return base;
-    }
-
-    private Node secondPointView() {
-        Node base = new Node();
-        base.setRenderable(secondPointRenderable);
-        Context c = this;
-        // Add  listeners etc here
-        View eView = secondPointRenderable.getView();
-        eView.setOnTouchListener((v, event) -> {
-            Toast.makeText(
-                    c, "Location marker touched.", Toast.LENGTH_LONG)
-                    .show();
             return false;
         });
         return base;
