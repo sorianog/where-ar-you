@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ViewRenderable firstPointRenderable;
     private ViewRenderable secondPointRenderable;
     private LocationScene locationScene;
-    private DatabaseManager databaseManager;
+    private DatabaseManager databaseManager = new DatabaseManager();;
     private int currentWaypoint = 1;
 
     @Override
@@ -70,9 +70,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         // Set the view to the following activity
         setContentView(R.layout.activity_sceneform);
-
-        databaseManager = new DatabaseManager();
-        databaseManager.callDatabase();
 
         arSceneView = findViewById(R.id.ar_scene_view);
 

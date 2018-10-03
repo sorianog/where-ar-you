@@ -25,6 +25,10 @@ public class DatabaseManager {
     LocationListener locationListener;
     private ImageView arrowView;
 
+    public DatabaseManager() {
+        callDatabase();
+    }
+
     public void callDatabase() {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference locationsReference = firebaseDatabase.getReference("locations");
