@@ -33,6 +33,8 @@ import com.way.cloudnine.wherearyou.repositories.WaypointRepository;
 import com.way.cloudnine.wherearyou.utils.ArHelper;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -60,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private WaypointRepository waypointRepository = new WaypointRepository();
     private int currentWaypoint = 1;
     private TextView locationDetails, distanceDetails;
-
     @Override
     // Called when the activity is created
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,15 +77,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         boolean permissionGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         if(permissionGranted) {
-            LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Location location = this.locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             double longitude = location.getLongitude();
             double latitude = location.getLatitude();
         }
 
-
-
-
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                updateBanner();
+            }
+        }, 0, 1000);
 
         arSceneView = findViewById(R.id.ar_scene_view);
 
@@ -175,6 +180,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         // Lastly request CAMERA & fine location permission which is required by ARCore-Location.
         ARLocationPermissionHelper.requestPermission(this);
+    }
+
+
+    public void updateBanner(){
+        System.out.println("WERHGFIUWORHGOIUWERHGOIWURHGIOWURHGOIUWR");
     }
 
     @SuppressLint("ClickableViewAccessibility")
