@@ -223,18 +223,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return base;
     }
 
-    private Node getAndy() {
-        Node base = new Node();
-        base.setRenderable(andyRenderable);
-        Context c = this;
-        base.setOnTapListener((v, event) -> {
-            Toast.makeText(
-                    c, "Andy touched.", Toast.LENGTH_LONG)
-                    .show();
-        });
-        return base;
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
