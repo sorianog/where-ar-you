@@ -124,8 +124,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 // An example "onRender" event, called every frame
                 // Updates the layout with the markers distance
                 layoutLocationMarkerFirstPoint.setRenderEvent(waypoint -> {
-                    String way = waypointRepository.getWaypoints().get(currentWaypoint).getName()
-
                     String location = waypointRepository.getWaypoints().get(currentWaypoint).getName();
                     locationDetails.setText(location);
 
