@@ -88,8 +88,8 @@ public class DatabaseManager {
 
 
     public Waypoint GetWaypointById(int id) {
-        for (Waypoint waypoint : waypoints
-                ) {
+        for (Waypoint waypoint : waypoints) {
+
             if (waypoint.getId().equals(Integer.toString(id))) {
                 return waypoint;
             }
