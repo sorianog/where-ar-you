@@ -28,6 +28,7 @@ import com.way.cloudnine.wherearyou.models.Waypoint;
 import com.way.cloudnine.wherearyou.repositories.DatabaseManager;
 import com.way.cloudnine.wherearyou.utils.ArHelper;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -182,13 +183,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Add  listeners etc here
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
-            if (currentWaypoint < databaseManager.waypoints.size() - 1) {
-                double latitude = databaseManager.waypoints.get(currentWaypoint).getLatitude();
-                double longitude = databaseManager.waypoints.get(currentWaypoint).getLongitude();
+            List<Waypoint> waypoints = databaseManager.getWaypoints();
+            if (currentWaypoint < waypoints.size() - 1) {
+                double latitude = waypoints.get(currentWaypoint).getLatitude();
+                double longitude = waypoints.get(currentWaypoint).getLongitude();
                 locationScene.mLocationMarkers.get(0).latitude = latitude;
                 locationScene.mLocationMarkers.get(0).longitude = longitude;
                 Toast.makeText(
-                        c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude + " Location: " + databaseManager.waypoints.get(currentWaypoint).getName(), Toast.LENGTH_LONG)
+                        c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude + " Location: " + waypoints.get(currentWaypoint).getName(), Toast.LENGTH_LONG)
                         .show();
             }
             currentWaypoint++;

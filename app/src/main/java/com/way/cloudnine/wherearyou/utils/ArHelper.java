@@ -38,8 +38,7 @@ import uk.co.appoly.arcorelocation.utils.ARLocationPermissionHelper;
 public class ArHelper {
     private static final String TAG = "SceneformDemoUtils";
 
-    public static void displayError(
-            final Context context, final String errorMsg, @Nullable final Throwable problem) {
+    public static void displayError(final Context context, final String errorMsg, @Nullable final Throwable problem) {
         final String tag = context.getClass().getSimpleName();
         final String toastText;
         if (problem != null && problem.getMessage() != null) {
@@ -53,13 +52,11 @@ public class ArHelper {
             toastText = errorMsg;
         }
 
-        new Handler(Looper.getMainLooper())
-                .post(
-                        () -> {
-                            Toast toast = Toast.makeText(context, toastText, Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
-                            toast.show();
-                        });
+        new Handler(Looper.getMainLooper()).post(() -> {
+            Toast toast = Toast.makeText(context, toastText, Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        });
     }
 
     public static Session createArSession(Activity activity, boolean installRequested)

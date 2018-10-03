@@ -11,7 +11,6 @@ public class Waypoint {
     private List<String> connections;
     private String id;
 
-
     public Waypoint() {
         // Default constructor required for calls to DataSnapshot.getValue(Post.class)
     }
