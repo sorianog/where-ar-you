@@ -81,32 +81,30 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 .setSource(this, R.raw.andy)
                 .build();
 
-        CompletableFuture.allOf(
-                firstPoint,
-                andy)
-                .handle(
-                        (notUsed, throwable) -> {
-                            // When you build a Renderable, Sceneform loads its resources in the background while
-                            // returning a CompletableFuture. Call handle(), thenAccept(), or check isDone()
-                            // before calling get().
+        CompletableFuture
+                .allOf(firstPoint, andy)
+                .handle((notUsed, throwable) -> {
+                    // When you build a Renderable, Sceneform loads its resources in the background while
+                    // returning a CompletableFuture. Call handle(), thenAccept(), or check isDone()
+                    // before calling get().
 
-                            if (throwable != null) {
-                                DemoUtils.displayError(this, "Unable to load renderables", throwable);
-                                return null;
-                            }
+                    if (throwable != null) {
+                        DemoUtils.displayError(this, "Unable to load renderables", throwable);
+                        return null;
+                    }
 
-                            try {
-                                firstPointRenderable = firstPoint.get();
-                                secondPointRenderable = secondPoint.get();
-                                andyRenderable = andy.get();
-                                finishedLoading = true;
+                    try {
+                        firstPointRenderable = firstPoint.get();
+                        secondPointRenderable = secondPoint.get();
+                        andyRenderable = andy.get();
+                        finishedLoading = true;
 
-                            } catch (InterruptedException | ExecutionException ex) {
-                                DemoUtils.displayError(this, "Unable to load renderables", ex);
-                            }
+                    } catch (InterruptedException | ExecutionException ex) {
+                        DemoUtils.displayError(this, "Unable to load renderables", ex);
+                    }
 
-                            return null;
-                        });
+                    return null;
+                });
 
         // Set an update listener on the Scene that will hide the loading message once a Plane is
         // detected.
