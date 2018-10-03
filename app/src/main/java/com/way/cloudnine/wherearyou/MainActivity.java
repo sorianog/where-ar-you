@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setContentView(R.layout.activity_sceneform);
 
         databaseManager = new DatabaseManager();
-        databaseManager.CallDatabase();
+        databaseManager.callDatabase();
 
         arSceneView = findViewById(R.id.ar_scene_view);
 
@@ -388,7 +388,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     System.currentTimeMillis()
             );
 
-            //new DatabaseManager().Trash(locationManager,geoField);
+            //new DatabaseManager().trash(locationManager,geoField);
         }
 
         @Override
