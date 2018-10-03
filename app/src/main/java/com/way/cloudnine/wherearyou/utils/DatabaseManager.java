@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class DatabaseManager {
-    public List<Waypoint> pathWaypoints = new ArrayList<>();
-    public List<Waypoint> shortestPathList = new ArrayList<>();
+    public List<Waypoint> waypoints = new ArrayList<>();
+    public List<Waypoint> shortestPath = new ArrayList<>();
     public Waypoint nextWaypoint = new Waypoint();
     LocationListener locationListener;
     private ImageView arrowView;
@@ -34,11 +34,11 @@ public class DatabaseManager {
             // Called whenever data changes
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    pathWaypoints.add(child.getValue(Waypoint.class));
+                    waypoints.add(child.getValue(Waypoint.class));
                 }
-                System.out.println(pathWaypoints.get(0).getBuilding());
-                //GetSortedShortestPath(pathWaypoints);
-                //System.out.println("Feet:" + GetDistance(pathWaypoints,"1","2"));
+                System.out.println(waypoints.get(0).getBuilding());
+                //GetSortedShortestPath(waypoints);
+                //System.out.println("Feet:" + GetDistance(waypoints,"1","2"));
             }
 
             @Override
@@ -56,12 +56,12 @@ public class DatabaseManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    pathWaypoints.add(child.getValue(Waypoint.class));
+                    waypoints.add(child.getValue(Waypoint.class));
                 }
-                System.out.println(pathWaypoints.get(0).getBuilding());
+                System.out.println(waypoints.get(0).getBuilding());
                 DoStuff(locationManager, geoField);
-                //GetSortedShortestPath(pathWaypoints);
-                //System.out.println("Feet:" + GetDistance(pathWaypoints,"1","2"));
+                //GetSortedShortestPath(waypoints);
+                //System.out.println("Feet:" + GetDistance(waypoints,"1","2"));
             }
 
             @Override
@@ -72,8 +72,8 @@ public class DatabaseManager {
     }
 
     public void ChangeDirection(String id) {
-        if ((GetCurrentLocationLatitude() >= shortestPathList.get(Integer.parseInt(id)).getLatitude() - .00100 && GetCurrentLocationLatitude() <= shortestPathList.get(Integer.parseInt(id)).getLatitude() + .00100) &&
-                (GetCurrentLocationLongitude() >= shortestPathList.get(Integer.parseInt(id)).getLongitude() - .00100 && GetCurrentLocationLongitude() <= shortestPathList.get(Integer.parseInt(id)).getLatitude() + .00100)) {
+        if ((GetCurrentLocationLatitude() >= shortestPath.get(Integer.parseInt(id)).getLatitude() - .00100 && GetCurrentLocationLatitude() <= shortestPath.get(Integer.parseInt(id)).getLatitude() + .00100) &&
+                (GetCurrentLocationLongitude() >= shortestPath.get(Integer.parseInt(id)).getLongitude() - .00100 && GetCurrentLocationLongitude() <= shortestPath.get(Integer.parseInt(id)).getLatitude() + .00100)) {
             //Turn Arrow
         }
     }
@@ -87,8 +87,8 @@ public class DatabaseManager {
     }
 
 
-    public Waypoint GetNodeById(int id) {
-        for (Waypoint waypoint : pathWaypoints
+    public Waypoint GetWaypointById(int id) {
+        for (Waypoint waypoint : waypoints
                 ) {
             if (waypoint.getId().equals(Integer.toString(id))) {
                 return waypoint;
@@ -98,9 +98,9 @@ public class DatabaseManager {
     }
 
 
-    public void GetShortesPathOfNodes() {
-        for (int i = 0; i < pathWaypoints.size(); i++) {
-            shortestPathList.add(pathWaypoints.get(i));
+    public void GetShortestPath() {
+        for (int i = 0; i < waypoints.size(); i++) {
+            shortestPath.add(waypoints.get(i));
         }
     }
 
@@ -194,7 +194,7 @@ public class DatabaseManager {
 
         Location endingLocation = new Location("ending point");
 
-        Waypoint nextWaypoint = GetNodeById(2);
+        Waypoint nextWaypoint = GetWaypointById(2);
         endingLocation.setLatitude(nextWaypoint.getLatitude());
         endingLocation.setLongitude(nextWaypoint.getLongitude());
 

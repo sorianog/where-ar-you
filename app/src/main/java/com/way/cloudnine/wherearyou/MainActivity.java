@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         // Now lets create our location markers.
                         // First, a layout
                         LocationMarker layoutLocationMarkerFirstPoint = new LocationMarker(
-                                databaseManager.pathWaypoints.get(0).getLongitude(),
-                                databaseManager.pathWaypoints.get(0).getLatitude(),
+                                databaseManager.waypoints.get(0).getLongitude(),
+                                databaseManager.waypoints.get(0).getLatitude(),
                                 firstPointView()
                         );
 
@@ -199,13 +199,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Add  listeners etc here
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
-            if (currentWaypoint < databaseManager.pathWaypoints.size() - 1) {
-                double latitude = databaseManager.pathWaypoints.get(currentWaypoint).getLatitude();
-                double longitude = databaseManager.pathWaypoints.get(currentWaypoint).getLongitude();
+            if (currentWaypoint < databaseManager.waypoints.size() - 1) {
+                double latitude = databaseManager.waypoints.get(currentWaypoint).getLatitude();
+                double longitude = databaseManager.waypoints.get(currentWaypoint).getLongitude();
                 locationScene.mLocationMarkers.get(0).latitude = latitude;
                 locationScene.mLocationMarkers.get(0).longitude = longitude;
                 Toast.makeText(
-                        c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude + " Location: " + databaseManager.pathWaypoints.get(currentWaypoint).getName(), Toast.LENGTH_LONG)
+                        c, "Latitude: " + locationScene.mLocationMarkers.get(0).latitude + " Longitude: " + locationScene.mLocationMarkers.get(0).longitude + " Location: " + databaseManager.waypoints.get(currentWaypoint).getName(), Toast.LENGTH_LONG)
                         .show();
             }
             currentWaypoint++;
