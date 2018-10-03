@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.way.cloudnine.wherearyou;
+package com.way.cloudnine.wherearyou.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,7 +35,7 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 
 import uk.co.appoly.arcorelocation.utils.ARLocationPermissionHelper;
 
-public class DemoUtils {
+public class ArHelper {
     private static final String TAG = "SceneformDemoUtils";
 
     public static void displayError(

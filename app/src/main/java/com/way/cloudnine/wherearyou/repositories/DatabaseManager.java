@@ -1,4 +1,4 @@
-package com.way.cloudnine.wherearyou.utils;
+package com.way.cloudnine.wherearyou.repositories;
 
 import android.annotation.SuppressLint;
 import android.graphics.Matrix;
@@ -13,6 +13,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.way.cloudnine.wherearyou.models.Waypoint;
 
 import java.util.ArrayList;
 import java.util.Collections;

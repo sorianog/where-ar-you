@@ -1,4 +1,4 @@
-package com.way.cloudnine.wherearyou.utils;
+package com.way.cloudnine.wherearyou.models;
 
 import java.util.List;
 

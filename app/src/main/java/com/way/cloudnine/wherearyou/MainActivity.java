@@ -24,8 +24,9 @@ import com.google.ar.sceneform.Node;
 import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
-import com.way.cloudnine.wherearyou.utils.DatabaseManager;
-import com.way.cloudnine.wherearyou.utils.Waypoint;
+import com.way.cloudnine.wherearyou.models.Waypoint;
+import com.way.cloudnine.wherearyou.repositories.DatabaseManager;
+import com.way.cloudnine.wherearyou.utils.ArHelper;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     // before calling get().
 
                     if (throwable != null) {
-                        DemoUtils.displayError(this, "Unable to load renderables", throwable);
+                        ArHelper.displayError(this, "Unable to load renderables", throwable);
                         return null;
                     }
 
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         finishedLoading = true;
 
                     } catch (InterruptedException | ExecutionException ex) {
-                        DemoUtils.displayError(this, "Unable to load renderables", ex);
+                        ArHelper.displayError(this, "Unable to load renderables", ex);
                     }
 
                     return null;
@@ -223,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             // If the session wasn't created yet, don't resume rendering.
             // This can happen if ARCore needs to be updated or permissions are not granted yet.
             try {
-                Session session = DemoUtils.createArSession(this, installRequested);
+                Session session = ArHelper.createArSession(this, installRequested);
                 if (session == null) {
                     installRequested = ARLocationPermissionHelper.hasPermission(this);
                     return;
@@ -231,14 +232,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     arSceneView.setupSession(session);
                 }
             } catch (UnavailableException e) {
-                DemoUtils.handleSessionException(this, e);
+                ArHelper.handleSessionException(this, e);
             }
         }
 
         try {
             arSceneView.resume();
         } catch (CameraNotAvailableException ex) {
-            DemoUtils.displayError(this, "Unable to get camera", ex);
+            ArHelper.displayError(this, "Unable to get camera", ex);
             finish();
             return;
         }
