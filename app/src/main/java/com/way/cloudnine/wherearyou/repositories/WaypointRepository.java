@@ -10,16 +10,16 @@ import com.way.cloudnine.wherearyou.models.Waypoint;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseManager {
+public class WaypointRepository {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference locationsReference;
     private List<Waypoint> waypoints = new ArrayList<>();
 
-    public DatabaseManager() {
-        setupDatabase();
+    public WaypointRepository() {
+        retrieveData();
     }
 
-    public void setupDatabase() {
+    public void retrieveData() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         locationsReference = firebaseDatabase.getReference("locations");
 

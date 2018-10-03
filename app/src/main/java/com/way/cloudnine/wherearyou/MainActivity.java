@@ -25,7 +25,7 @@ import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.way.cloudnine.wherearyou.models.Waypoint;
-import com.way.cloudnine.wherearyou.repositories.DatabaseManager;
+import com.way.cloudnine.wherearyou.repositories.WaypointRepository;
 import com.way.cloudnine.wherearyou.utils.ArHelper;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ViewRenderable firstPointRenderable;
     private ViewRenderable secondPointRenderable;
     private LocationScene locationScene;
-    private DatabaseManager databaseManager = new DatabaseManager();
+    private WaypointRepository waypointRepository = new WaypointRepository();
     private int currentWaypoint = 1;
 
     @Override
@@ -118,14 +118,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (locationScene == null) {
                 locationScene = new LocationScene(this, this, arSceneView);
 
-                Waypoint firstWaypoint = databaseManager.getWaypointById("1");
+                Waypoint firstWaypoint = waypointRepository.getWaypointById("1");
                 LocationMarker layoutLocationMarkerFirstPoint = new LocationMarker(
                         firstWaypoint.getLongitude(),
                         firstWaypoint.getLatitude(),
                         firstPointView()
                 );
 
-                Waypoint secondWaypoint = databaseManager.getWaypointById("2");
+                Waypoint secondWaypoint = waypointRepository.getWaypointById("2");
                 LocationMarker layoutLocationMarkerSecondPoint = new LocationMarker(
                         secondWaypoint.getLongitude(),
                         secondWaypoint.getLatitude(),
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // Add  listeners etc here
         View eView = firstPointRenderable.getView();
         eView.setOnTouchListener((v, event) -> {
-            List<Waypoint> waypoints = databaseManager.getWaypoints();
+            List<Waypoint> waypoints = waypointRepository.getWaypoints();
             if (currentWaypoint < waypoints.size() - 1) {
                 double latitude = waypoints.get(currentWaypoint).getLatitude();
                 double longitude = waypoints.get(currentWaypoint).getLongitude();
