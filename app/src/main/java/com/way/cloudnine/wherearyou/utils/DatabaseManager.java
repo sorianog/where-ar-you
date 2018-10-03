@@ -36,37 +36,33 @@ public class DatabaseManager {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     waypoints.add(child.getValue(Waypoint.class));
                 }
-                System.out.println(waypoints.get(0).getBuilding());
                 //getSortedShortestPath(waypoints);
-                //System.out.println("Feet:" + getDistance(waypoints,"1","2"));
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                System.out.println("Database Error");
             }
         });
     }
 
     public void trash(LocationManager locationManager, GeomagneticField geoField) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("locations");
-        myRef.addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference locationsReference = firebaseDatabase.getReference("locations");
+        locationsReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
                     waypoints.add(child.getValue(Waypoint.class));
                 }
-                System.out.println(waypoints.get(0).getBuilding());
                 doStuff(locationManager, geoField);
                 //getSortedShortestPath(waypoints);
-                //System.out.println("Feet:" + getDistance(waypoints,"1","2"));
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                System.out.println("Database Error");
             }
         });
     }
@@ -74,7 +70,7 @@ public class DatabaseManager {
     public void changeDirection(String id) {
         if ((getCurrentLocationLatitude() >= shortestPath.get(Integer.parseInt(id)).getLatitude() - .00100 && getCurrentLocationLatitude() <= shortestPath.get(Integer.parseInt(id)).getLatitude() + .00100) &&
                 (getCurrentLocationLongitude() >= shortestPath.get(Integer.parseInt(id)).getLongitude() - .00100 && getCurrentLocationLongitude() <= shortestPath.get(Integer.parseInt(id)).getLatitude() + .00100)) {
-            //Turn Arrow
+            // Turn Arrow
         }
     }
 
