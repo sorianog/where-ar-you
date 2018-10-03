@@ -1,23 +1,13 @@
 package com.way.cloudnine.wherearyou;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
-import android.content.Intent;
 import android.hardware.GeomagneticField;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -332,82 +322,5 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         loadingMessageSnackbar.dismiss();
         loadingMessageSnackbar = null;
-    }
-
-    public static boolean checkIsSupportedDeviceOrFinish(final Activity activity) {
-        if (Build.VERSION.SDK_INT < VERSION_CODES.N) {
-            Log.e(TAG, "Sceneform requires Android N or later");
-            Toast.makeText(activity, "Sceneform requires Android N or later", Toast.LENGTH_LONG).show();
-            activity.finish();
-            return false;
-        }
-        String openGlVersionString =
-                ((ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE))
-                        .getDeviceConfigurationInfo()
-                        .getGlEsVersion();
-        if (Double.parseDouble(openGlVersionString) < MIN_OPENGL_VERSION) {
-            Log.e(TAG, "Sceneform requires OpenGL ES 3.0 later");
-            Toast.makeText(activity, "Sceneform requires OpenGL ES 3.0 or later", Toast.LENGTH_LONG)
-                    .show();
-            activity.finish();
-            return false;
-        }
-        return true;
-    }
-
-    LocationListener locationListenerGPS = new LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-            double latitude = location.getLatitude();
-            double longitude = location.getLongitude();
-            String msg = "New Latitude: " + latitude + " New Longitude: " + longitude;
-            //Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
-            System.out.println("New Latitude: " + latitude + " New Longitude: " + longitude);
-            geoField = new GeomagneticField(
-                    Double.valueOf(location.getLatitude()).floatValue(),
-                    Double.valueOf(location.getLongitude()).floatValue(),
-                    Double.valueOf(location.getAltitude()).floatValue(),
-                    System.currentTimeMillis()
-            );
-
-            //new DatabaseManager().trash(locationManager,geoField);
-        }
-
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-    };
-
-    private void isLocationEnabled() {
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-            alertDialog.setTitle("Enable Location");
-            alertDialog.setMessage("Your locations setting is not enabled. Please enabled it in settings menu.");
-            alertDialog.setPositiveButton("Location Settings", (dialog, which) -> {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            });
-            alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-            AlertDialog alert = alertDialog.create();
-            alert.show();
-        } else {
-//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-//            alertDialog.setTitle("Confirm Location");
-//            alertDialog.setMessage("Your Location is enabled, please enjoy");
-//            alertDialog.setNegativeButton("Back to interface", (dialog, which) -> dialog.cancel());
-//            AlertDialog alert = alertDialog.create();
-//            alert.show();
-        }
     }
 }
