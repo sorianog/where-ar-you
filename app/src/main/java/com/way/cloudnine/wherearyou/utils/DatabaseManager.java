@@ -87,10 +87,9 @@ public class DatabaseManager {
     }
 
 
-    public Waypoint getWaypointById(int id) {
+    public Waypoint getWaypointById(String id) {
         for (Waypoint waypoint : waypoints) {
-
-            if (waypoint.getId().equals(Integer.toString(id))) {
+            if (waypoint.getId().equals(id)) {
                 return waypoint;
             }
         }
@@ -194,7 +193,7 @@ public class DatabaseManager {
 
         Location endingLocation = new Location("ending point");
 
-        Waypoint nextWaypoint = getWaypointById(2);
+        Waypoint nextWaypoint = getWaypointById("3");
         endingLocation.setLatitude(nextWaypoint.getLatitude());
         endingLocation.setLongitude(nextWaypoint.getLongitude());
 

@@ -35,6 +35,7 @@ import com.google.ar.sceneform.rendering.ModelRenderable;
 import com.google.ar.sceneform.rendering.ViewRenderable;
 import com.google.ar.sceneform.ux.ArFragment;
 import com.way.cloudnine.wherearyou.utils.DatabaseManager;
+import com.way.cloudnine.wherearyou.utils.Waypoint;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ViewRenderable firstPointRenderable;
     private ViewRenderable secondPointRenderable;
     private LocationScene locationScene;
-    private DatabaseManager databaseManager = new DatabaseManager();;
+    private DatabaseManager databaseManager = new DatabaseManager();
     private int currentWaypoint = 1;
 
     @Override
@@ -119,71 +120,67 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         // Set an update listener on the Scene that will hide the loading message once a Plane is
         // detected.
-        arSceneView
-                .getScene().addOnUpdateListener(
-                frameTime -> {
-                    if (!finishedLoading) {
-                        return;
-                    }
+        arSceneView.getScene().addOnUpdateListener(frameTime -> {
+            if (!finishedLoading) {
+                return;
+            }
 
-                    if (locationScene == null) {
-                        // If our locationScene object hasn't been setup yet, this is a good time to do it
-                        // We know that here, the AR components have been initiated.
-                        locationScene = new LocationScene(this, this, arSceneView);
+            if (locationScene == null) {
+                locationScene = new LocationScene(this, this, arSceneView);
 
-                        // Now lets create our location markers.
-                        // First, a layout
-                        LocationMarker layoutLocationMarkerFirstPoint = new LocationMarker(
-                                databaseManager.waypoints.get(0).getLongitude(),
-                                databaseManager.waypoints.get(0).getLatitude(),
-                                firstPointView()
-                        );
+                Waypoint firstWaypoint = databaseManager.getWaypointById("1");
+                LocationMarker layoutLocationMarkerFirstPoint = new LocationMarker(
+                        firstWaypoint.getLongitude(),
+                        firstWaypoint.getLatitude(),
+                        firstPointView()
+                );
 
-                        LocationMarker layoutLocationMarkerSecondPoint = new LocationMarker(
-                                -81.442835,
-                                41.54800,
-                                secondPointView()
-                        );
+                Waypoint secondWaypoint = databaseManager.getWaypointById("2");
+                LocationMarker layoutLocationMarkerSecondPoint = new LocationMarker(
+                        secondWaypoint.getLongitude(),
+                        secondWaypoint.getLatitude(),
+                        secondPointView()
+                );
 
-                        // An example "onRender" event, called every frame
-                        // Updates the layout with the markers distance
-                        layoutLocationMarkerFirstPoint.setRenderEvent(waypoint -> {
+                // An example "onRender" event, called every frame
+                // Updates the layout with the markers distance
+                layoutLocationMarkerFirstPoint.setRenderEvent(waypoint -> {
 
-                            View eView = firstPointRenderable.getView();
-                            TextView distanceTextView = eView.findViewById(R.id.textView2);
-                            distanceTextView.setText(waypoint.getDistance() + "M");
-                        });
-                        layoutLocationMarkerSecondPoint.setRenderEvent(waypoint -> {
-
-                            View eView = secondPointRenderable.getView();
-                            TextView distanceTextView = eView.findViewById(R.id.secondPointLocation);
-                            distanceTextView.setText(waypoint.getDistance() + "M");
-                        });
-                        // Adding the marker
-                        locationScene.mLocationMarkers.add(layoutLocationMarkerFirstPoint);
-                    }
-
-                    Frame frame = arSceneView.getArFrame();
-                    if (frame == null) {
-                        return;
-                    }
-
-                    if (frame.getCamera().getTrackingState() != TrackingState.TRACKING) {
-                        return;
-                    }
-
-                    if (locationScene != null) {
-                        locationScene.processFrame(frame);
-                    }
-
-                    if (loadingMessageSnackbar != null) {
-                        for (Plane plane : frame.getUpdatedTrackables(Plane.class)) {
-                            if (plane.getTrackingState() == TrackingState.TRACKING) {
-                                hideLoadingMessage();
-                            }
-                        }
-                    }
+                    View eView = firstPointRenderable.getView();
+                    TextView distanceTextView = eView.findViewById(R.id.textView2);
+                    distanceTextView.setText(waypoint.getDistance() + "M");
                 });
+                layoutLocationMarkerSecondPoint.setRenderEvent(waypoint -> {
+
+                    View eView = secondPointRenderable.getView();
+                    TextView distanceTextView = eView.findViewById(R.id.secondPointLocation);
+                    distanceTextView.setText(waypoint.getDistance() + "M");
+                });
+                // Adding the marker
+                locationScene.mLocationMarkers.add(layoutLocationMarkerFirstPoint);
+            }
+
+            Frame frame = arSceneView.getArFrame();
+            if (frame == null) {
+                return;
+            }
+
+            if (frame.getCamera().getTrackingState() != TrackingState.TRACKING) {
+                return;
+            }
+
+            if (locationScene != null) {
+                locationScene.processFrame(frame);
+            }
+
+            if (loadingMessageSnackbar != null) {
+                for (Plane plane : frame.getUpdatedTrackables(Plane.class)) {
+                    if (plane.getTrackingState() == TrackingState.TRACKING) {
+                        hideLoadingMessage();
+                    }
+                }
+            }
+        });
 
         // Lastly request CAMERA & fine location permission which is required by ARCore-Location.
         ARLocationPermissionHelper.requestPermission(this);
