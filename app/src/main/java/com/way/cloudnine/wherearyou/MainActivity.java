@@ -43,51 +43,35 @@ import uk.co.appoly.arcorelocation.LocationMarker;
 import uk.co.appoly.arcorelocation.LocationScene;
 import uk.co.appoly.arcorelocation.utils.ARLocationPermissionHelper;
 
-/**
- * This is an example activity that uses the Sceneform UX package to make common AR tasks easier.
- */
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final double MIN_OPENGL_VERSION = 3.0;
+
     LocationManager locationManager;
     Context mContext;
     GeomagneticField geoField;
-    private ArFragment arFragment;
+    private ArFragment arrowFragment;
     private ModelRenderable arrowRenderable;
-
     private boolean installRequested;
-    private boolean hasFinishedLoading = false;
-
+    private boolean finishedLoading = false;
     private Snackbar loadingMessageSnackbar = null;
-
     private ArSceneView arSceneView;
-
-    // Renderables for this example
     private ModelRenderable andyRenderable;
     private ViewRenderable firstPointRenderable;
     private ViewRenderable secondPointRenderable;
-
-
-    // Our ARCore-Location scene
     private LocationScene locationScene;
-
     private DatabaseManager databaseManager;
-
     private int currentNode;
 
-
     @Override
-    @SuppressWarnings({"AndroidApiChecker", "FutureReturnValueIgnored"})
-    // CompletableFuture requires api level 24
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sceneform);
 
         currentNode = 0;
+
         databaseManager = new DatabaseManager();
-
         databaseManager.CallDatabase();
-
 
         arSceneView = findViewById(R.id.ar_scene_view);
 
@@ -101,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 ViewRenderable.builder()
                         .setView(this, R.layout.second_point)
                         .build();
-
 
         // When you build a Renderable, Sceneform loads its resources in the background while returning
         // a CompletableFuture. Call thenAccept(), handle(), or check isDone() before calling get().
@@ -127,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                                 firstPointRenderable = firstPoint.get();
                                 secondPointRenderable = secondPoint.get();
                                 andyRenderable = andy.get();
-                                hasFinishedLoading = true;
+                                finishedLoading = true;
 
                             } catch (InterruptedException | ExecutionException ex) {
                                 DemoUtils.displayError(this, "Unable to load renderables", ex);
@@ -141,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         arSceneView
                 .getScene().addOnUpdateListener(
                 frameTime -> {
-                    if (!hasFinishedLoading) {
+                    if (!finishedLoading) {
                         return;
                     }
 
@@ -180,9 +163,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         });
                         // Adding the marker
                         locationScene.mLocationMarkers.add(layoutLocationMarkerFirstPoint);
-
-                        // Adding a simple location marker of a 3D model
-
                     }
 
                     Frame frame = arSceneView.getArFrame();
@@ -205,19 +185,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                             }
                         }
                     }
-
                 });
-
 
         // Lastly request CAMERA & fine location permission which is required by ARCore-Location.
         ARLocationPermissionHelper.requestPermission(this);
     }
 
-    /**
-     * Example node of a layout
-     *
-     * @return
-     */
     private Node firstPointView() {
         Node base = new Node();
         base.setRenderable(firstPointRenderable);
@@ -237,15 +210,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
             return false;
         });
-
         return base;
     }
 
-    /**
-     * Example node of a layout
-     *
-     * @return
-     */
     private Node secondPointView() {
         Node base = new Node();
         base.setRenderable(secondPointRenderable);
@@ -258,15 +225,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     .show();
             return false;
         });
-
         return base;
     }
 
-    /***
-     * Example Node of a 3D model
-     *
-     * @return
-     */
     private Node getAndy() {
         Node base = new Node();
         base.setRenderable(andyRenderable);
@@ -279,9 +240,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         return base;
     }
 
-    /**
-     * Make sure we call locationScene.resume();
-     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -319,9 +277,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    /**
-     * Make sure we call locationScene.pause();
-     */
     @Override
     public void onPause() {
         super.onPause();
@@ -463,15 +418,13 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
             AlertDialog alert = alertDialog.create();
             alert.show();
-
-
         } else {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-            alertDialog.setTitle("Confirm Location");
-            alertDialog.setMessage("Your Location is enabled, please enjoy");
-            alertDialog.setNegativeButton("Back to interface", (dialog, which) -> dialog.cancel());
-            AlertDialog alert = alertDialog.create();
-            //alert.show();
+//            AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+//            alertDialog.setTitle("Confirm Location");
+//            alertDialog.setMessage("Your Location is enabled, please enjoy");
+//            alertDialog.setNegativeButton("Back to interface", (dialog, which) -> dialog.cancel());
+//            AlertDialog alert = alertDialog.create();
+//            alert.show();
         }
     }
 }
